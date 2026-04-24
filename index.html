@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	
 	<meta charset="utf-8">
-	
 	<title>Friday Night Funkin' Hatsune Miku</title>
-	
 	<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	
@@ -14,29 +11,17 @@
 	<script type="text/javascript" src="./Newb.js"></script>
 	
 	<script>
-		// --- GLOBAL ERROR HANDLING START ---
-		
-		// Catch standard JavaScript runtime errors
+		// --- Error Reporting Logic ---
 		window.onerror = function (message, source, lineno, colno, error) {
-			const errorMsg = [
-				'--- JavaScript Error ---',
-				'Message: ' + message,
-				'Source: ' + source,
-				'Line: ' + lineno,
-				'Column: ' + colno
-			].join('\n');
-			
-			alert(errorMsg);
-			return false; // False allows the error to still appear in the browser console
+			alert("JS Error: " + message + "\nLine: " + lineno + "\nSource: " + source);
+			return false;
 		};
 
-		// Catch unhandled promise rejections (useful for asset loading failures)
 		window.addEventListener('unhandledrejection', function (event) {
-			alert("Unhandled Promise Rejection:\n" + event.reason);
+			alert("Async Error: " + event.reason);
 		});
 
-		// --- GLOBAL ERROR HANDLING END ---
-
+		// Mobile scaling logic
 		window.addEventListener ("touchmove", function (event) { event.preventDefault (); }, { capture: false, passive: false });
 		if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
 			var meta = document.getElementById ("viewport");
@@ -45,16 +30,15 @@
 	</script>
 	
 	<style>
-		html,body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
-		#openfl-content { background: #000000; width: 100%; height: 100%; }
+		html,body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
+		#openfl-content { width: 100%; height: 100%; }
 		
 		@font-face {
 			font-family: 'Pixel Arial 11 Bold';
 			src: url('assets/fonts/pixel.eot?#iefix') format('embedded-opentype'),
 			url('assets/fonts/pixel.woff') format('woff'),
 			url('assets/fonts/pixel.otf') format('truetype');
-			font-weight: normal;
-			font-style: normal;
+			font-weight: normal; font-style: normal;
 		}
 		@font-face {
 			font-family: 'VCR OSD Mono';
@@ -62,45 +46,44 @@
 			url('assets/fonts/vcr.woff') format('woff'),
 			url('assets/fonts/vcr.ttf') format('truetype'),
 			url('assets/fonts/vcr.svg#VCR%20OSD%20Mono') format('svg');
-			font-weight: normal;
-			font-style: normal;
+			font-weight: normal; font-style: normal;
 		}
 		@font-face {
 			font-family: 'Nokia Cellphone FC Small';
 			src: url('flixel/fonts/nokiafc22.eot?#iefix') format('embedded-opentype'),
 			url('flixel/fonts/nokiafc22.woff') format('woff'),
-			url('flixel/fonts/nokiafc22.ttf') format('truetype'),
-			url('flixel/fonts/nokiafc22.svg#Nokia%20Cellphone%20FC%20Small') format('svg');
-			font-weight: normal;
-			font-style: normal;
+			url('flixel/fonts/nokiafc22.ttf') format('truetype');
+			font-weight: normal; font-style: normal;
 		}
 		@font-face {
 			font-family: 'Monsterrat';
 			src: url('flixel/fonts/monsterrat.eot?#iefix') format('embedded-opentype'),
 			url('flixel/fonts/monsterrat.woff') format('woff'),
-			url('flixel/fonts/monsterrat.ttf') format('truetype'),
-			url('flixel/fonts/monsterrat.svg#Monsterrat') format('svg');
-			font-weight: normal;
-			font-style: normal;
+			url('flixel/fonts/monsterrat.ttf') format('truetype');
+			font-weight: normal; font-style: normal;
 		}
-
 	</style>
-	
 </head>
 <body>
 	
-	<noscript>This webpage makes extensive use of JavaScript. Please enable JavaScript in your web browser to view this page.</noscript>
+	<noscript>Please enable JavaScript to view this page.</noscript>
 	
 	<div id="openfl-content"></div>
 	
 	<script type="text/javascript">
-		// Wrap the embed call in a try/catch for immediate feedback 
-		// if the lime framework fails to initialize.
-		try {
-			lime.embed ("Newb", "openfl-content", 1280, 720, { parameters: {} });
-		} catch (err) {
-			alert("Critical Framework Error: " + err.message);
-		}
+		// Wait for everything to load before initializing
+		window.onload = function() {
+			try {
+				// Check if the 'lime' object was actually created by Newb.js
+				if (typeof lime !== "undefined") {
+					lime.embed ("Newb", "openfl-content", 1280, 720, { parameters: {} });
+				} else {
+					alert("CRITICAL ERROR: 'lime' is undefined.\n\nPossible reasons:\n1. Newb.js failed to load (Check Vercel file paths).\n2. The file is named 'newb.js' (lowercase) but called as 'Newb.js'.\n3. Newb.js is empty or corrupted.");
+				}
+			} catch (e) {
+				alert("Initialization Error: " + e.message);
+			}
+		};
 	</script>
 	
 </body>
